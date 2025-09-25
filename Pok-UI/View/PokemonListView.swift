@@ -9,35 +9,34 @@ import SwiftUI
 
 struct PokemonListView: View {
     @StateObject private var vm: PokeViewModel
-        @State private var searchText: String = ""
+    @State private var searchText: String = String()
 
-        public init(viewModel: PokeViewModel) {
-            _vm = StateObject(wrappedValue: viewModel)
-        }
-
-        public var body: some View {
-            NavigationView {
-                ZStack {
-                    content
-                    if vm.isLoading && vm.list.isEmpty {
-                        ProgressView().scaleEffect(1.2)
-                    }
+    public init(viewModel: PokeViewModel) {
+        _vm = StateObject(wrappedValue: viewModel)
+    }
+    public var body: some View {
+        NavigationView {
+            ZStack {
+                content
+                if vm.isLoading && vm.list.isEmpty {
+                    ProgressView().scaleEffect(1.2)
                 }
-                .navigationTitle("Pokémon")
-                .searchable(text: $searchText, prompt: "Buscar por nombre")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        if vm.isLoading && !vm.list.isEmpty {
-                            ProgressView()
-                        }
-                    }
-                }
-                .task { await vm.loadInitial() }
-                .refreshable { await vm.refresh() }
-                .overlay(errorView, alignment: .center)
             }
+            .navigationTitle("Pokémon")
+            .searchable(text: $searchText, prompt: "Buscar por nombre")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if vm.isLoading && !vm.list.isEmpty {
+                        ProgressView()
+                    }
+                }
+            }
+            .task { await vm.loadInitial() }
+            .refreshable { await vm.refresh() }
+            .overlay(errorView, alignment: .center)
         }
-
+    }
+    
     private var content: some View {
         let filtered = searchText.isEmpty
             ? vm.list
@@ -81,4 +80,3 @@ struct PokemonListView: View {
 #Preview {
     PokemonListView(viewModel: PokeViewModel())
 }
-

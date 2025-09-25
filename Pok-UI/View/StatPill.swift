@@ -23,7 +23,6 @@ struct StatPill: View {
 
 public extension PokemonEntry {
     var idFromURL: Int? {
-        // Extrae el último número del path (la URL de PokeAPI termina en /pokemon/{id}/)
         let comps = detailsURL.path.split(separator: "/").compactMap { Int($0) }
         return comps.last
     }
