@@ -12,7 +12,7 @@ Run (⌘R).
 
 
 Estructura del proyecto
-
+```text
 .
 ├─ Sources/
 │  ├─ Models/
@@ -29,7 +29,7 @@ Estructura del proyecto
 │     ├─ PokemonDetailView.swift
 │     └─ PokeCard.swift
 └─ README.md
-
+```
 
 Decisiones arquitectónicas
 
