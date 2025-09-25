@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct PokemonListView: View {
     @StateObject private var vm: PokeViewModel
         @State private var searchText: String = ""
 
@@ -79,6 +79,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(viewModel: PokeViewModel())
+    PokemonListView(viewModel: PokeViewModel())
 }
 
