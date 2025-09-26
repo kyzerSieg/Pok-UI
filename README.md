@@ -1,7 +1,12 @@
 # Pok-UI
 
-Clonar el repositorio: https://github.com/kyzerSieg/Pok-UI.git
+Clonar el repositorio: 
 
+```text
+
+https://github.com/kyzerSieg/Pok-UI.git
+
+```
 Abrir Pokedex.xcodeproj
 
 Seleccionar el target de la app.
@@ -11,7 +16,7 @@ Elegir un simulador iOS 15+.
 Run (⌘R).
 
 
-Estructura del proyecto
+## Estructura del proyecto
 ```text
 .
 ├─ Sources/
@@ -31,15 +36,21 @@ Estructura del proyecto
 └─ README.md
 ```
 
-Decisiones arquitectónicas
+## Decisiones arquitectónicas
 
-Arquitectura: MVVM + Services.
+### Arquitectura:
+	
+MVVM + Services.
 
-Models: Codable alineados a los JSON de PokéAPI (PokemonList, PokemonEntry, PokemonDetails, PokemonSpecies).
+### Models:
+	
+Codable alineados a los JSON de PokéAPI (PokemonList, PokemonEntry, PokemonDetails, PokemonSpecies).
 
-ViewModel: PokeViewModel expone estado con @Published y usa async/await para orquestar red, paginación, búsqueda y errores.
+### ViewModel: 
 
-Services:
+PokeViewModel expone estado con @Published y usa async/await para orquestar red, paginación, búsqueda y errores.
+
+### Services:
 
 PokeAPIProtocol (y PokeAPI): capa única de acceso HTTP con URLSession.
 
@@ -49,8 +60,8 @@ UI 100% SwiftUI: PokemonListView, PokemonDetailView, PokeCard. Vistas reactivas,
 
 La VM resuelve y cachea la URL, la vista solo la consume.
 
-Optimizaciones implementadas (OBLIGATORIAS)
-A) Lazy Loading de Imágenes
+## Optimizaciones implementadas (OBLIGATORIAS)
+### A) Lazy Loading de Imágenes
 
 Las celdas piden la imagen solo al aparecer:
 onAppear { await vm.ensureArtwork(for: entry) }
@@ -59,12 +70,12 @@ onAppear { await vm.ensureArtwork(for: entry) }
 Cache: ImageCacheService usa URLCache.shared para evitar descargas repetidas.
 
 
-B) Paginación Eficiente
+### B) Paginación Eficiente
 
 Páginas de 50.
 
 
-C) Lista Optimizada (SwiftUI)
+### C) Lista Optimizada (SwiftUI)
 
 List (lazy) con IDs estables (id: enumerated().offset).
 
@@ -72,7 +83,7 @@ Celdas sin logica (dummy) (PokeCard): sin cálculos de URL ni red.
 
 @Published private(set) y diccionario artworkByID @Published para invalidaciones precisas.
 
-Manejo de errores
+## Manejo de errores
 
 Errores de red: timeouts, 4xx/5xx -> se muestran en PokemonListView.
 
@@ -87,7 +98,7 @@ Carga inicial: ProgressView centrado si la lista está vacía.
 Carga incremental: ProgressView en la toolbar mientras se pagina.
 
 
-Búsqueda en tiempo real
+## Búsqueda en tiempo real
 
 searchable(text:) en PokemonListView.
 
@@ -106,21 +117,12 @@ AsyncImage (iOS 15+) apoya cache del sistema automáticamente; el prefetch reduc
 Combine: @Published para estado; la VM es @MainActor.
 
 
-Promps usados: 
+## Promps usados: 
 
 get codable model, clean code https://pokeapi.co/api/v2/pokemon?limit=50&offset=0
 
 get codable model, clean code https://pokeapi.co/api/v2/pokemon/22
 
 get codable model, clean code https://pokeapi.co/api/v2/pokemon-species/22
-
-
-
-
-
-
-
-
-
 
 
