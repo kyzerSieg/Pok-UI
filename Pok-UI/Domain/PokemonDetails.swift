@@ -48,8 +48,4 @@ public struct SpritesOther: Codable {
 
 public struct OfficialArtwork: Codable {
     public let frontDefault: URL?
-
-    private enum CodingKeys: String, CodingKey {
-        case frontDefault = "front_default"
-    }
 }

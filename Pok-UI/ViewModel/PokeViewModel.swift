@@ -25,7 +25,13 @@ final class PokeViewModel: ObservableObject {
     init(images: ImageCacheServiceProtocol = ImageCacheService()) {
         self.images = images
     }
-
+    
+    func reset() {
+        selectedDetails = nil
+        selectedSpecies = nil
+        errorMessage = nil
+    }
+    
     func loadInitial() async {
         offset = 0
         await loadPage(reset: true)

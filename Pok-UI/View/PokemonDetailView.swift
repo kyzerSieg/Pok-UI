@@ -56,7 +56,7 @@ struct PokemonDetailView: View {
                     .padding(.horizontal)
                 }
                 if let s = viewModel.selectedSpecies,
-                    let flavor = spanishFlavor(from: s) ?? englishFlavor(from: s) {
+                    let flavor = textFlavor(from: s) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Descripción")
                             .font(.title3).bold()
@@ -76,31 +76,28 @@ struct PokemonDetailView: View {
         }
         .navigationTitle("Detalle")
         .navigationBarTitleDisplayMode(.inline)
-        .task {
+        .task(id: idOrName) {
+            await MainActor.run {
+                viewModel.reset()
+            }
             await viewModel.selectPokemon(idOrName: idOrName)
         }
     }
 
     private var artworkURL: URL? {
-        if let id = viewModel.selectedDetails?.id {
-            return URL(string:
-                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(id).png"
-            )
+        viewModel.selectedDetails?.sprites.other?.officialArtwork?.frontDefault
+    }
+    
+    private func textFlavor(from species: PokemonSpecies) -> String? {
+        func clean(_ text: String?) -> String? {
+            text?.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(of: "\u{0C}", with: " ")
         }
-        return nil
-    }
-    private func spanishFlavor(from species: PokemonSpecies) -> String? {
-        species.flavorTextEntries
-            .first(where: { $0.language.name == "es" })?
-            .flavorText
-            .replacingOccurrences(of: "\n", with: " ")
-            .replacingOccurrences(of: "\u{0C}", with: " ")
-    }
-    private func englishFlavor(from species: PokemonSpecies) -> String? {
-        species.flavorTextEntries
-            .first(where: { $0.language.name == "en" })?
-            .flavorText
-            .replacingOccurrences(of: "\n", with: " ")
-            .replacingOccurrences(of: "\u{0C}", with: " ")
+        
+        return species.flavorTextEntries
+            .first(where: { $0.language.name == "es" })
+            .map { clean($0.flavorText) }
+        ?? species.flavorTextEntries
+            .first(where: { $0.language.name == "en" })
+            .map { clean($0.flavorText) ?? String() }
     }
 }
